@@ -1,47 +1,119 @@
-# API Explorer: Mastering RESTful Connections
+## API Overview
 
-## Description
-CineSeek is a modern movie discovery application built with Next.js, TypeScript, and Tailwind CSS. The application allows users to browse movies from the MoviesDatabase API, view movie details, and search for films by year or genre. The project focuses on creating a responsive, well-structured web application with proper API integration and TypeScript typing.
+This API delivers complete, up-to-date information on movies, TV shows, and actors, including trailers, awards, biographies, filmographies, and other valuable details. It’s ideal for powering apps, websites, and platforms that need reliable entertainment data.
 
-## Objectives
-- Understanding API documentation and integration
-- Implementing TypeScript interfaces for API responses
-- Creating reusable React components
-- Building a responsive layout with Tailwind CSS
-- Managing application state for filtering and pagination
-- Implementing proper error handling and loading states
-- Setting up Next.js API routes for server-side data fetching
-- Environment variable management for API keys
+## Version
+V1
 
-## Requirements
-### Technical Stack
-- Next.js 14 (Pages Router) 
-- TypeScript
-- Tailwind CSS
-- Font Awesome icons
-- MoviesDatabase API
+## Available Endpoints
+### Title
+path: /titles
+returns title acording to filters / sorting query parameters provided
 
-### Development Requirements
-- Node.js (v16 or higher)
-- npm or yarn
-- Git for version control
+### Title Rating
+path: /titles/ratings
+returns title rating and votes number
 
-## API Integration
-The application uses the MoviesDatabase API with the following key endpoints: - /titles - Main endpoint for fetching movie data - Supports filtering by year and genre - Implements pagination for browsing through results
+### Seasons and Episodes
+path: / /titles/series/{id}
+returns array of episodes only with episode id, episode number and season number in ascending order
 
-## Authentication
-API key authentication via headers
-Environment variable storage for API key
-Server-side API route to protect client-side exposure of keys
+### Seasons Number
+path: /titles/seasons/{id}
+returns number of seasons for the series
 
-## Error Handling
-Loading component for pending states
-Try/catch blocks in API routes
-Status code checking for API responses
-Type guards for API data
+### Episode
+path: /titles/episode/{id}
+returns episode according to filters / sorting query parameters provided
 
-## Usage Limits
-API rate limiting considerations
-Pagination to limit request size
-Client-side caching of responses where appropriate
-Error boundaries for graceful failure
+## Request and Response Format
+
+All API requests and responses use JSON unless otherwise stated. Requests should include the following HTTP header:
+
+- Content-Type: application/json
+
+If authentication is required, also include:
+
+- Authorization: Bearer <your_api_token>
+
+1. Request Structure
+A typical API request consists of:
+
+Component	 - Description
+HTTP Method	 - The action to perform (e.g., GET, POST, PUT, DELETE).
+Endpoint	 - The URL path to the resource (e.g., /movies/{id}).
+Headers	     - Key-value pairs providing metadata (e.g., Content-Type, Authorization).
+Path Params	 - Variables embedded in the URL path (e.g., {id}).
+Query Params - 	Optional parameters appended to the URL (e.g., ?limit=10&page=2).
+Body	     - JSON object containing data for POST/PUT requests.
+
+Example – POST Request:
+
+
+POST /movies HTTP/1.1
+Host: api.example.com
+Authorization: Bearer your_api_token
+Content-Type: application/json
+
+Request Body:
+
+
+{
+  "title": "Example Movie",
+  "year": 2023,
+  "genres": ["Drama", "Thriller"],
+  "runtime_minutes": 115
+}
+
+2. Response Structure
+A typical API response contains:
+
+Field	Type	Description
+data	object/array	The main payload containing requested or newly created resources.
+meta	object	Metadata about the response (pagination info, totals, etc.).
+error	boolean	Indicates if an error occurred (true or false).
+message	string	Human-readable description of the result or error.
+code	integer	HTTP status code or custom application code.
+
+Example – Success (200 OK):
+
+{
+  "data": {
+    "id": "tt1234567",
+    "title": "Example Movie",
+    "year": 2023,
+    "genres": ["Drama", "Thriller"],
+    "runtime_minutes": 115,
+    "trailer_url": "https://youtube.com/watch?v=example",
+    "awards": {
+      "nominations": 3,
+      "wins": 1
+    },
+    "cast": [
+      { "name": "John Doe", "role": "Lead Actor" },
+      { "name": "Jane Smith", "role": "Supporting Actress" }
+    ]
+  },
+  "meta": {
+    "request_id": "abc123",
+    "timestamp": "2025-08-10T17:45:00Z"
+  },
+  "error": false,
+  "message": "Movie details retrieved successfully",
+  "code": 200
+}
+Example – Error (404 Not Found):
+
+json
+Copy
+Edit
+{
+  "data": null,
+  "meta": {
+    "request_id": "xyz789",
+    "timestamp": "2025-08-10T17:45:00Z"
+  },
+  "error": true,
+  "message": "Movie not found",
+  "code": 404
+}
